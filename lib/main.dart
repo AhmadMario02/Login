@@ -87,46 +87,133 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) {
+        setState(() {
+          _selectedIndex = _tabController.index;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    _tabController.animateTo(index);
+  }
+
+  void _selectTab(int index) {
+    Navigator.pop(context);
+    _onItemTapped(index);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.blue,
-            bottom: const TabBar(
-              labelStyle: TextStyle(color: Colors.white),
-              unselectedLabelStyle: TextStyle(color: Colors.white),
-              tabs: [
-                Tab(text: 'Home'),
-                Tab(text: 'Product'),
-                Tab(text: 'Contact')
-              ]
-            ),
-            title: const Text('Assessment 2'),
-            leading: const IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: null,
-            ),
-            titleTextStyle: const TextStyle(color: Colors.white),
-          ),
-          body: const TabBarView(
-            children: [
-              Center(child: Text('Home Page')), 
-              Center(child: Text('Product')), 
-              Center(child: Text('Contact'))
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        bottom: TabBar(
+          controller: _tabController,
+          labelStyle: const TextStyle(color: Colors.white),
+          unselectedLabelStyle: const TextStyle(color: Colors.white),
+          tabs: const [
+            Tab(text: 'Home'),
+            Tab(text: 'Product'),
+            Tab(text: 'Contact'),
+          ],
         ),
+        title: const Text('Assessment 2'),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+        titleTextStyle: const TextStyle(color: Colors.white),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
+              onTap: () => _selectTab(0),
+            ),
+            ListTile(
+              leading: const Icon(Icons.add_shopping_cart),
+              title: const Text('Product'),
+              onTap: () => _selectTab(1),
+            ),
+            ListTile(
+              leading: const Icon(Icons.phone),
+              title: const Text('Contact'),
+              onTap: () => _selectTab(2),
+            ),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: const [
+          Center(child: Text('Home Page')),
+          Center(child: Text('Product')),
+          Center(child: Text('Contact')),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_shopping_cart),
+            label: 'Product',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.phone),
+            label: 'Contact',
+          ),
+        ],
       ),
     );
   }
 }
-// Icon(Icons.home),
-// Icon(Icons.add_shopping_cart),
-// Icon(Icons.phone),
