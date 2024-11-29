@@ -16,28 +16,24 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'Demo Login')
+      home: const LoginPage(title: 'Demo Login')
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key, required this.title});
   final String title;
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const IconButton(
-          onPressed: null, 
-          icon: Icon(Icons.menu),
-          tooltip: 'Menu',),
         backgroundColor: Colors.blue,
         title: Text(widget.title),
       ),
@@ -48,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(height: 10,),
             TextField(
               decoration: InputDecoration(
+                icon: Icon(Icons.account_circle),
                 border: OutlineInputBorder(),
                 hintText: 'Nama',
               ),
@@ -55,18 +52,27 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(height: 10,),
             TextField(
               decoration: InputDecoration(
+                icon: Icon(Icons.phone),
                 border: OutlineInputBorder(),
-                hintText: 'Email',
+                hintText: 'No. HP',
               ),
             ),
             SizedBox(height: 10,),
             TextField(
               decoration: InputDecoration(
+                icon: Icon(Icons.email),
                 border: OutlineInputBorder(),
-                hintText: 'Password',
+                hintText: 'Email',
               ),
             ),
-            SizedBox(height: 10,)
+            SizedBox(height: 10,),
+            TextButton(
+              style: ButtonStyle(
+                foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
+                backgroundColor: WidgetStatePropertyAll<Color>(Colors.blue)
+              ),
+              onPressed: null, 
+              child: Text("Validasi Data"))
           ],
         ),
       ),
